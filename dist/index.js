@@ -12,17 +12,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// src/index.ts
 const express_1 = __importDefault(require("express"));
 const database_1 = require("./config/database");
 const env_1 = require("./config/env");
 const app = (0, express_1.default)();
 const port = env_1.env.port;
+app.use(express_1.default.json());
 function start() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield (0, database_1.connect)();
-        app.listen(port, () => {
-            console.log(`Server running on port ${port}`);
-        });
+        try {
+            yield (0, database_1.connect)();
+            app.listen(port, () => {
+                console.log(`Server running on port ${port}`);
+            });
+        }
+        catch (error) {
+            console.error("Failed to start server due to database connection error:", error);
+            process.exit(1);
+        }
     });
 }
 start();

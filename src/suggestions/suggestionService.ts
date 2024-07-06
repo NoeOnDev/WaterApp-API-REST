@@ -1,0 +1,1 @@
+// src/suggestions/suggestionService.ts
