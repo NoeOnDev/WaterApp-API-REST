@@ -32,8 +32,13 @@ class UserService {
                 RETURNING id, username, street, email, role
             `;
                 const result = yield client.query(insertUserQuery, [username, street, email, hashedPassword, role]);
+                const newUser = result.rows[0];
+                if (role === 'Admin') {
+                    yield client.query('UPDATE Users SET street = NULL WHERE id = $1', [newUser.id]);
+                    newUser.street = null;
+                }
                 yield client.query('COMMIT');
-                return result.rows[0];
+                return newUser;
             }
             catch (error) {
                 yield client.query('ROLLBACK');

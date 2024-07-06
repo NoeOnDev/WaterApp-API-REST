@@ -28,10 +28,16 @@ class UserService {
                 RETURNING id, username, street, email, role
             `;
             const result = await client.query(insertUserQuery, [username, street, email, hashedPassword, role]);
+            const newUser = result.rows[0];
+
+            if (role === 'Admin') {
+                await client.query('UPDATE Users SET street = NULL WHERE id = $1', [newUser.id]);
+                newUser.street = null;
+            }
 
             await client.query('COMMIT');
 
-            return result.rows[0];
+            return newUser;
         } catch (error) {
             await client.query('ROLLBACK');
             throw new Error('Error registering user');
