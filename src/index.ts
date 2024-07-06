@@ -1,3 +1,4 @@
+// src/index.ts
 import express from 'express';
 import { connect } from './config/database';
 import { env } from './config/env';

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.env = void 0;
+// src/config/env.ts
 exports.env = {
     port: process.env.PORT,
     db: {

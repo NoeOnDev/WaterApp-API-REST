@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.pool = void 0;
 exports.connect = connect;
+// src/config/database.ts
 const pg_1 = require("pg");
 const env_1 = require("./env");
 const pool = new pg_1.Pool({
