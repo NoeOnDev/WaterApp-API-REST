@@ -17,10 +17,12 @@ const express_1 = __importDefault(require("express"));
 const database_1 = require("./config/database");
 const env_1 = require("./config/env");
 const userRoutes_1 = __importDefault(require("./users/userRoutes"));
+const streetRoutes_1 = __importDefault(require("./streets/streetRoutes"));
 const app = (0, express_1.default)();
 const port = env_1.env.port;
 app.use(express_1.default.json());
 app.use('/users', userRoutes_1.default);
+app.use('/streets', streetRoutes_1.default);
 function start() {
     return __awaiter(this, void 0, void 0, function* () {
         try {

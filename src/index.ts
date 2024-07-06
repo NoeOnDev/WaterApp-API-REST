@@ -3,12 +3,14 @@ import express from 'express';
 import { connect } from './config/database';
 import { env } from './config/env';
 import userRoutes from './users/userRoutes';
+import streetRoutes from './streets/streetRoutes';
 
 const app = express();
 const port = env.port;
 
 app.use(express.json());
 app.use('/users', userRoutes);
+app.use('/streets', streetRoutes);
 
 async function start() {
     try {
