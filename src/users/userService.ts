@@ -51,6 +51,19 @@ class UserService {
         }
     }
 
+    async getAllUsers() {
+        const client = await pool.connect();
+        try {
+            const query = 'SELECT username, email, role FROM Users';
+            const result = await client.query(query);
+            return result.rows;
+        } catch (error) {
+            throw new Error('Error fetching users');
+        } finally {
+            client.release();
+        }
+    }
+
     async loginUser({ email, password }: LoginUserDto) {
         const client = await pool.connect();
         try {

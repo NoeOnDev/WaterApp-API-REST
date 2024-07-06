@@ -49,6 +49,22 @@ class UserService {
             }
         });
     }
+    getAllUsers() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const client = yield database_1.pool.connect();
+            try {
+                const query = 'SELECT username, email, role FROM Users';
+                const result = yield client.query(query);
+                return result.rows;
+            }
+            catch (error) {
+                throw new Error('Error fetching users');
+            }
+            finally {
+                client.release();
+            }
+        });
+    }
     loginUser(_a) {
         return __awaiter(this, arguments, void 0, function* ({ email, password }) {
             const client = yield database_1.pool.connect();
