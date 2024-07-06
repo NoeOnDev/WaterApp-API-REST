@@ -1,0 +1,71 @@
+SELECT * FROM Users;
+SELECT * FROM Notification;
+SELECT * FROM NotificationHistory;
+SELECT * FROM Street;
+SELECT * FROM SuggestedMessage;
+SELECT * FROM UserNotification;
+SELECT * FROM NotificationStreet;
+
+CREATE TABLE Users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    street VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(10) CHECK (role IN ('User', 'Admin')) NOT NULL
+);
+
+CREATE TABLE Notification (
+    id SERIAL PRIMARY KEY,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    admin_id INTEGER REFERENCES Users(id)
+);
+
+CREATE TABLE NotificationHistory (
+    id SERIAL PRIMARY KEY,
+    notification_id INTEGER REFERENCES Notification(id),
+    admin_id INTEGER REFERENCES Users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Street (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL
+);
+
+CREATE TABLE SuggestedMessage (
+    id SERIAL PRIMARY KEY,
+    message TEXT UNIQUE NOT NULL,
+    admin_id INTEGER REFERENCES Users(id)
+);
+
+CREATE TABLE UserNotification (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES Users(id),
+    notification_id INTEGER REFERENCES Notification(id),
+    read_status BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE NotificationStreet (
+    notification_id INTEGER REFERENCES Notification(id),
+    street_id INTEGER REFERENCES Street(id),
+    PRIMARY KEY (notification_id, street_id)
+);
+
+
+-- Eliminar registros relacionados de UserNotification
+DELETE FROM UserNotification WHERE user_id IN (SELECT id FROM Users);
+
+-- Eliminar registros relacionados de SuggestedMessage
+DELETE FROM SuggestedMessage WHERE admin_id IN (SELECT id FROM Users);
+
+-- Eliminar registros relacionados de NotificationHistory
+DELETE FROM NotificationHistory WHERE admin_id IN (SELECT id FROM Users);
+
+-- Eliminar registros relacionados de Notification
+DELETE FROM Notification WHERE admin_id IN (SELECT id FROM Users);
+
+-- Finalmente, eliminar los registros de Users
+DELETE FROM Users;

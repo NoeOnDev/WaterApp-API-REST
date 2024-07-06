@@ -2,11 +2,13 @@
 import express from 'express';
 import { connect } from './config/database';
 import { env } from './config/env';
+import userRoutes from './users/userRoutes';
 
 const app = express();
 const port = env.port;
 
 app.use(express.json());
+app.use('/users', userRoutes);
 
 async function start() {
     try {
