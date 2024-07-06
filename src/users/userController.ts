@@ -16,6 +16,7 @@ class UserController {
             }
         }
     }
+
     async getAllUsers(_req: Request, res: Response) {
         try {
             const users = await userService.getAllUsers();
@@ -28,6 +29,7 @@ class UserController {
             }
         }
     }
+    
     async loginUser(req: Request, res: Response) {
         try {
             const { email, password } = req.body;
