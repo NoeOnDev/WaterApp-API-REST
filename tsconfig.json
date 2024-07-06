@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "es2016",                                  /* Especifica la versión de JavaScript a la que se compilará el código TypeScript. Puedes ajustar esto según tus necesidades. */
+    "module": "commonjs",                                /* Usa CommonJS para la compatibilidad con Node.js. */
+    "outDir": "./dist",                                  /* Directorio donde se colocarán los archivos compilados. */
+    "rootDir": "./src",                                  /* Directorio raíz de los archivos fuente. */
+    "esModuleInterop": true,                             /* Habilita la interoperabilidad de módulos ES y CommonJS. */
+    "emitDecoratorMetadata": true,                       /* Habilita la emisión de metadatos de decoradores para la reflexión. */
+    "experimentalDecorators": true,                      /* Habilita la sintaxis de decoradores de TypeScript. */
+    "forceConsistentCasingInFileNames": true,            /* Asegura que el uso de mayúsculas y minúsculas en los nombres de archivo sea consistente. */
+    "strict": true,                                      /* Habilita todas las opciones de verificación estricta. */
+    "skipLibCheck": true,                                /* Omite la verificación de archivos de definición de bibliotecas para mejorar el rendimiento de la compilación. */
+    "resolveJsonModule": true,                           /* Permite la importación de archivos JSON. */
+    "moduleResolution": "node",                          /* Usa la resolución de módulos de Node.js. */
+    "allowSyntheticDefaultImports": true,                /* Permite las importaciones predeterminadas sintéticas. */
+    "strictNullChecks": true,                            /* Habilita la verificación estricta de null y undefined. */
+    "noImplicitAny": true,                               /* Evita que se infiera any implícitamente. */
+    "noImplicitThis": true,                              /* Evita el uso implícito de this de tipo any. */
+    "alwaysStrict": true,                                /* Asegura que siempre se emita 'use strict'. */
+    "noUnusedLocals": true,                              /* Habilita la verificación de variables locales no utilizadas. */
+    "noUnusedParameters": true,                          /* Habilita la verificación de parámetros de función no utilizados. */
+    "noImplicitReturns": true,                           /* Habilita la verificación de rutas de código que no retornan en una función. */
+    "noFallthroughCasesInSwitch": true                   /* Habilita la verificación de casos en switch que no hacen break. */
+  },
+  "include": ["src"],                                    /* Incluye todos los archivos TypeScript en el directorio src. */
+  "exclude": ["node_modules", "**/*.spec.ts"]            /* Excluye node_modules y archivos de pruebas. */
+}
