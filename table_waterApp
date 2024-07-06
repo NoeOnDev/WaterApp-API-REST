@@ -8,8 +8,8 @@ SELECT * FROM NotificationStreet;
 
 CREATE TABLE Users (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    street VARCHAR(100) NOT NULL,
+    username VARCHAR(50)NOT NULL,
+    street VARCHAR(100),
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     role VARCHAR(10) CHECK (role IN ('User', 'Admin')) NOT NULL
@@ -55,17 +55,18 @@ CREATE TABLE NotificationStreet (
 );
 
 
--- Eliminar registros relacionados de UserNotification
+-- Eliminar registros de las tablas
 DELETE FROM UserNotification WHERE user_id IN (SELECT id FROM Users);
-
--- Eliminar registros relacionados de SuggestedMessage
 DELETE FROM SuggestedMessage WHERE admin_id IN (SELECT id FROM Users);
-
--- Eliminar registros relacionados de NotificationHistory
 DELETE FROM NotificationHistory WHERE admin_id IN (SELECT id FROM Users);
-
--- Eliminar registros relacionados de Notification
 DELETE FROM Notification WHERE admin_id IN (SELECT id FROM Users);
-
--- Finalmente, eliminar los registros de Users
 DELETE FROM Users;
+
+-- Eliminar tablas
+DROP TABLE IF EXISTS UserNotification CASCADE;
+DROP TABLE IF EXISTS NotificationStreet CASCADE;
+DROP TABLE IF EXISTS SuggestedMessage CASCADE;
+DROP TABLE IF EXISTS Street CASCADE;
+DROP TABLE IF EXISTS NotificationHistory CASCADE;
+DROP TABLE IF EXISTS Notification CASCADE;
+DROP TABLE IF EXISTS Users CASCADE;
