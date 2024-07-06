@@ -49,5 +49,42 @@ class UserService {
             }
         });
     }
+    getAllUsers() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const client = yield database_1.pool.connect();
+            try {
+                const query = 'SELECT username, email, role FROM Users';
+                const result = yield client.query(query);
+                return result.rows;
+            }
+            catch (error) {
+                throw new Error('Error fetching users');
+            }
+            finally {
+                client.release();
+            }
+        });
+    }
+    loginUser(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ email, password }) {
+            const client = yield database_1.pool.connect();
+            try {
+                const query = 'SELECT id, username, email, password, role FROM Users WHERE email = $1';
+                const result = yield client.query(query, [email]);
+                if (result.rows.length === 0) {
+                    throw new Error('Invalid email or password');
+                }
+                const user = result.rows[0];
+                const isPasswordValid = yield bcrypt_1.default.compare(password, user.password);
+                if (!isPasswordValid) {
+                    throw new Error('Invalid email or password');
+                }
+                return { username: user.username, email: user.email, role: user.role };
+            }
+            finally {
+                client.release();
+            }
+        });
+    }
 }
 exports.userService = new UserService();

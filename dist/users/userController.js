@@ -29,5 +29,38 @@ class UserController {
             }
         });
     }
+    getAllUsers(_req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const users = yield userService_1.userService.getAllUsers();
+                res.status(200).json(users);
+            }
+            catch (error) {
+                if (error instanceof Error) {
+                    console.log(error.message);
+                }
+                else {
+                    console.log('Error desconocido');
+                }
+            }
+        });
+    }
+    loginUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { email, password } = req.body;
+                const user = yield userService_1.userService.loginUser({ email, password });
+                res.status(200).json(user);
+            }
+            catch (error) {
+                if (error instanceof Error) {
+                    console.log(error.message);
+                }
+                else {
+                    console.log('Error desconocido');
+                }
+            }
+        });
+    }
 }
 exports.userController = new UserController();

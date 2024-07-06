@@ -9,6 +9,11 @@ interface RegisterUserDto {
     password: string;
 }
 
+interface LoginUserDto {
+    email: string;
+    password: string;
+}
+
 class UserService {
     async registerUser({ username, street, email, password }: RegisterUserDto) {
         const client = await pool.connect();
@@ -41,6 +46,42 @@ class UserService {
         } catch (error) {
             await client.query('ROLLBACK');
             throw new Error('Error registering user');
+        } finally {
+            client.release();
+        }
+    }
+
+    async getAllUsers() {
+        const client = await pool.connect();
+        try {
+            const query = 'SELECT username, email, role FROM Users';
+            const result = await client.query(query);
+            return result.rows;
+        } catch (error) {
+            throw new Error('Error fetching users');
+        } finally {
+            client.release();
+        }
+    }
+
+    async loginUser({ email, password }: LoginUserDto) {
+        const client = await pool.connect();
+        try {
+            const query = 'SELECT id, username, email, password, role FROM Users WHERE email = $1';
+            const result = await client.query(query, [email]);
+
+            if (result.rows.length === 0) {
+                throw new Error('Invalid email or password');
+            }
+
+            const user = result.rows[0];
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+
+            if (!isPasswordValid) {
+                throw new Error('Invalid email or password');
+            }
+
+            return { username: user.username, email: user.email, role: user.role };
         } finally {
             client.release();
         }
