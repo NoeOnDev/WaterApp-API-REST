@@ -1,0 +1,1 @@
+// src/suggestions/suggestionRoutes.ts
