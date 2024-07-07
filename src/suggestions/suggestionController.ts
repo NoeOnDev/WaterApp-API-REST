@@ -23,7 +23,7 @@ class SuggestionController {
                 res.status(400).json({ error: 'Unknown error' });
             }
         }
-        return null; // Esto es necesario para que TypeScript no se queje
+        return; // Esto es necesario para que TypeScript no se queje
     }
 
     async getAllSuggestions(_req: Request, res: Response) {
@@ -54,7 +54,7 @@ class SuggestionController {
                 res.status(400).json({ error: 'Unknown error' });
             }
         }
-        return null; // Esto es necesario para que TypeScript no se queje
+        return; // Esto es necesario para que TypeScript no se queje
     }
 }
 
