@@ -21,10 +21,10 @@ class UserController {
             }
             catch (error) {
                 if (error instanceof Error) {
-                    console.log(error.message);
+                    res.status(400).json({ error: error.message });
                 }
                 else {
-                    console.log('Error desconocido');
+                    res.status(400).json({ error: 'Unknown error' });
                 }
             }
         });
@@ -37,10 +37,10 @@ class UserController {
             }
             catch (error) {
                 if (error instanceof Error) {
-                    console.log(error.message);
+                    res.status(400).json({ error: error.message });
                 }
                 else {
-                    console.log('Error desconocido');
+                    res.status(400).json({ error: 'Unknown error' });
                 }
             }
         });
@@ -49,17 +49,15 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { email, password } = req.body;
-                const user = yield userService_1.userService.loginUser({ email, password });
-                res.status(200).json(user);
+                const { token, user } = yield userService_1.userService.loginUser({ email, password });
+                res.status(200).json({ token, user });
             }
             catch (error) {
                 if (error instanceof Error) {
-                    console.log(error.message);
                     res.status(400).json({ error: error.message });
                 }
                 else {
-                    console.log('Error desconocido');
-                    res.status(500).json({ error: 'Error desconocido' });
+                    res.status(400).json({ error: 'Unknown error' });
                 }
             }
         });

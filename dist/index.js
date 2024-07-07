@@ -17,18 +17,25 @@ const express_1 = __importDefault(require("express"));
 const database_1 = require("./config/database");
 const env_1 = require("./config/env");
 const userRoutes_1 = __importDefault(require("./users/userRoutes"));
+const streetRoutes_1 = __importDefault(require("./streets/streetRoutes"));
+const suggestionRoutes_1 = __importDefault(require("./suggestions/suggestionRoutes"));
 const notificationRoutes_1 = __importDefault(require("./notifications/notificationRoutes"));
 const app = (0, express_1.default)();
 const port = env_1.env.port;
 app.use(express_1.default.json());
 app.use('/users', userRoutes_1.default);
+app.use('/streets', streetRoutes_1.default);
+app.use('/suggestions', suggestionRoutes_1.default);
 app.use('/notifications', notificationRoutes_1.default);
+app.get('/', (_req, res) => {
+    res.send('Welcome to the best API 🚬');
+});
 function start() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield (0, database_1.connect)();
             app.listen(port, () => {
-                console.log(`Server running on port ${port}`);
+                console.log(`Server running on port http://localhost:${port} 🚀`);
             });
         }
         catch (error) {

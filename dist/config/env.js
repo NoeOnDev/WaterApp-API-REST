@@ -10,5 +10,9 @@ exports.env = {
         user: process.env.DB_USER,
         password: process.env.DB_PASS,
         database: process.env.DB_NAME,
+    },
+    jwt: {
+        jwtSecret: process.env.JWT_SECRET,
+        jwtExpiration: process.env.JWT_EXPIRES_IN,
     }
 };

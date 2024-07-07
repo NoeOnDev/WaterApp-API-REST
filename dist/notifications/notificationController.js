@@ -1,5 +1,4 @@
 "use strict";
-// src/notifications/notificationController.ts
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -13,45 +12,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.notificationController = void 0;
 const notificationService_1 = require("./notificationService");
 class NotificationController {
-    createNotification(req, res) {
+    sendNotification(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { adminId, message } = req.body;
-                const notification = yield notificationService_1.notificationService.createNotification({ adminId, message });
-                res.status(201).json(notification);
+                const { user } = req;
+                if (!user || user.role !== 'Admin') {
+                    return res.sendStatus(403); // Forbidden
+                }
+                const { message, street } = req.body;
+                yield notificationService_1.notificationService.sendNotificationToStreet(user.id, message, street);
+                return res.status(200).json({ message: 'Notification sent to users of the specified street successfully' });
             }
             catch (error) {
-                if (error instanceof Error) {
-                    console.log(error.message);
-                    res.status(400).json({ error: error.message });
-                }
-                else {
-                    console.log('Error desconocido');
-                    res.status(500).json({ error: 'Error desconocido' });
-                }
-            }
-        });
-    }
-    getAdminNotifications(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            var _a;
-            try {
-                const adminId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.userId; // Obtener adminId del token JWT
-                if (!adminId) {
-                    throw new Error('Admin ID not found in token');
-                }
-                const notifications = yield notificationService_1.notificationService.getAdminNotifications(adminId);
-                res.status(200).json(notifications);
-            }
-            catch (error) {
-                if (error instanceof Error) {
-                    console.log(error.message);
-                    res.status(400).json({ error: error.message });
-                }
-                else {
-                    console.log('Error desconocido');
-                    res.status(500).json({ error: 'Error desconocido' });
-                }
+                return res.status(500).json({ error: error.message });
             }
         });
     }

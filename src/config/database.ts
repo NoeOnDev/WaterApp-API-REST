@@ -15,11 +15,11 @@ async function connect() {
     while (retries) {
         try {
             await pool.connect();
-            console.log("Database connected");
+            console.log("Database connected ✅");
             break;
         } catch (error) {
             retries -= 1;
-            console.error(`Database connection error, retries left: ${retries}`, error);
+            console.error(`Database connection error ❌, retries left: ${retries}`, error);
             if (retries === 0) {
                 throw error;
             }

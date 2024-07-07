@@ -1,42 +1,23 @@
-// src/notifications/notificationController.ts
-
 import { Request, Response } from 'express';
 import { notificationService } from './notificationService';
 
+interface AuthRequest extends Request {
+    user?: { id: number; username: string; role: string };
+}
+
 class NotificationController {
-    async createNotification(req: Request, res: Response) {
+    async sendNotification(req: AuthRequest, res: Response) {
         try {
-            const { adminId, message } = req.body;
-            const notification = await notificationService.createNotification({ adminId, message });
-            res.status(201).json(notification);
-        } catch (error) {
-            if (error instanceof Error) {
-                console.log(error.message);
-                res.status(400).json({ error: error.message });
-            } else {
-                console.log('Error desconocido');
-                res.status(500).json({ error: 'Error desconocido' });
-            }
-        }
-    }
-
-    async getAdminNotifications(req: Request, res: Response) {
-        try {
-            const adminId = req.user?.userId; // Obtener adminId del token JWT
-            if (!adminId) {
-                throw new Error('Admin ID not found in token');
+            const { user } = req;
+            if (!user || user.role !== 'Admin') {
+                return res.sendStatus(403); // Forbidden
             }
 
-            const notifications = await notificationService.getAdminNotifications(adminId);
-            res.status(200).json(notifications);
-        } catch (error) {
-            if (error instanceof Error) {
-                console.log(error.message);
-                res.status(400).json({ error: error.message });
-            } else {
-                console.log('Error desconocido');
-                res.status(500).json({ error: 'Error desconocido' });
-            }
+            const { message, street } = req.body;
+            await notificationService.sendNotificationToStreet(user.id, message, street);
+            return res.status(200).json({ message: 'Notification sent to users of the specified street successfully' });
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
         }
     }
 }

@@ -1,66 +1,40 @@
-// src/notifications/notificationService.ts
-
 import { pool } from '../config/database';
 
-interface CreateNotificationDto {
-    adminId: number;
-    message: string;
-}
-
 class NotificationService {
-    async createNotification({ adminId, message }: CreateNotificationDto) {
+    async sendNotificationToStreet(adminId: number, message: string, street: string) {
         const client = await pool.connect();
         try {
             await client.query('BEGIN');
 
-            const adminQuery = 'SELECT role FROM Users WHERE id = $1';
-            const adminResult = await client.query(adminQuery, [adminId]);
-
-            if (adminResult.rows.length === 0 || adminResult.rows[0].role !== 'Admin') {
-                throw new Error('Only admins can send notifications');
-            }
-
+            // Insertar la notificación
             const insertNotificationQuery = `
                 INSERT INTO Notification (message, admin_id)
                 VALUES ($1, $2)
-                RETURNING id, message, created_at, admin_id
+                RETURNING id
             `;
-            const result = await client.query(insertNotificationQuery, [message, adminId]);
-            const newNotification = result.rows[0];
+            const notificationResult = await client.query(insertNotificationQuery, [message, adminId]);
+            const notificationId = notificationResult.rows[0].id;
 
-            const insertHistoryQuery = `
-                INSERT INTO NotificationHistory (notification_id, admin_id)
-                VALUES ($1, $2)
-                RETURNING id, notification_id, admin_id, created_at
+            // Obtener todos los usuarios de la calle especificada
+            const selectUsersQuery = `
+                SELECT id FROM Users WHERE street = $1
             `;
-            const historyResult = await client.query(insertHistoryQuery, [newNotification.id, adminId]);
-            historyResult.rows[0];
+            const usersResult = await client.query(selectUsersQuery, [street]);
+            const users = usersResult.rows;
+
+            // Asociar la notificación con los usuarios de la calle especificada
+            const insertUserNotificationQuery = `
+                INSERT INTO UserNotification (user_id, notification_id)
+                VALUES ($1, $2)
+            `;
+            for (const user of users) {
+                await client.query(insertUserNotificationQuery, [user.id, notificationId]);
+            }
 
             await client.query('COMMIT');
-
-            return newNotification;
         } catch (error) {
             await client.query('ROLLBACK');
-            throw new Error('Error creating notification');
-        } finally {
-            client.release();
-        }
-    }
-
-    async getAdminNotifications(adminId: number) {
-        const client = await pool.connect();
-        try {
-            const query = `
-                SELECT nh.notification_id, n.message, nh.created_at
-                FROM NotificationHistory nh
-                INNER JOIN Notification n ON nh.notification_id = n.id
-                WHERE nh.admin_id = $1
-                ORDER BY nh.created_at DESC
-            `;
-            const result = await client.query(query, [adminId]);
-            return result.rows;
-        } catch (error) {
-            throw new Error('Error fetching admin notifications');
+            throw new Error('Error sending notification to users of the specified street');
         } finally {
             client.release();
         }
