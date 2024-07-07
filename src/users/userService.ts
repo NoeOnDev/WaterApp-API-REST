@@ -1,6 +1,7 @@
 // src/users/userService.ts
 import { pool } from '../config/database';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 interface RegisterUserDto {
     username: string;
@@ -81,7 +82,14 @@ class UserService {
                 throw new Error('Invalid email or password');
             }
 
-            return { username: user.username, email: user.email, role: user.role };
+            // Generar el token JWT
+            const token = jwt.sign(
+                { userId: user.id, role: user.role },
+                'your_jwt_secret',
+                { expiresIn: '1h' }
+            );
+
+            return { username: user.username, email: user.email, role: user.role, token };
         } finally {
             client.release();
         }

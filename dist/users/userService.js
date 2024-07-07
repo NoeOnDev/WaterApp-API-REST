@@ -16,6 +16,7 @@ exports.userService = void 0;
 // src/users/userService.ts
 const database_1 = require("../config/database");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class UserService {
     registerUser(_a) {
         return __awaiter(this, arguments, void 0, function* ({ username, street, email, password }) {
@@ -79,7 +80,9 @@ class UserService {
                 if (!isPasswordValid) {
                     throw new Error('Invalid email or password');
                 }
-                return { username: user.username, email: user.email, role: user.role };
+                // Generar el token JWT
+                const token = jsonwebtoken_1.default.sign({ userId: user.id, role: user.role }, 'your_jwt_secret', { expiresIn: '1h' });
+                return { username: user.username, email: user.email, role: user.role, token };
             }
             finally {
                 client.release();
