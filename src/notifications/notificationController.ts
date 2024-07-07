@@ -11,12 +11,26 @@ class NotificationController {
         try {
             const { user } = req;
             if (!user || user.role !== 'Admin') {
-                return res.sendStatus(403); // Forbidden
+                return res.sendStatus(403);
             }
 
             const { message, street } = req.body;
             await notificationService.sendNotificationToStreet(user.id, message, street);
             return res.status(200).json({ message: 'Notification sent to users of the specified street successfully' });
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
+
+    async getNotificationHistory(req: AuthRequest, res: Response) {
+        try {
+            const { user } = req;
+            if (!user || user.role !== 'Admin') {
+                return res.sendStatus(403);
+            }
+
+            const notificationHistory = await notificationService.getNotificationHistory();
+            return res.status(200).json(notificationHistory);
         } catch (error: any) {
             return res.status(500).json({ error: error.message });
         }

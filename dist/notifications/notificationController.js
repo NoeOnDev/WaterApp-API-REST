@@ -17,7 +17,7 @@ class NotificationController {
             try {
                 const { user } = req;
                 if (!user || user.role !== 'Admin') {
-                    return res.sendStatus(403); // Forbidden
+                    return res.sendStatus(403);
                 }
                 const { message, street } = req.body;
                 yield notificationService_1.notificationService.sendNotificationToStreet(user.id, message, street);
@@ -28,15 +28,15 @@ class NotificationController {
             }
         });
     }
-    getAdminNotificationHistory(req, res) {
+    getNotificationHistory(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { user } = req;
                 if (!user || user.role !== 'Admin') {
-                    return res.sendStatus(403); // Forbidden
+                    return res.sendStatus(403);
                 }
-                const history = yield notificationService_1.notificationService.getAdminNotificationHistory();
-                return res.status(200).json(history);
+                const notificationHistory = yield notificationService_1.notificationService.getNotificationHistory();
+                return res.status(200).json(notificationHistory);
             }
             catch (error) {
                 return res.status(500).json({ error: error.message });
