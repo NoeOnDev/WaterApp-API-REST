@@ -67,10 +67,13 @@ class NotificationService {
         const client = await pool.connect();
         try {
             const query = `
-                SELECT nh.notification_id, n.message, nh.created_at
+                SELECT nh.notification_id, n.message, nh.created_at, array_agg(s.name) AS streets
                 FROM NotificationHistory nh
                 JOIN Notification n ON nh.notification_id = n.id
+                JOIN NotificationStreet ns ON nh.notification_id = ns.notification_id
+                JOIN Street s ON ns.street_id = s.id
                 WHERE nh.admin_id = $1
+                GROUP BY nh.notification_id, n.message, nh.created_at
                 ORDER BY nh.created_at DESC
             `;
             const result = await client.query(query, [adminId]);
