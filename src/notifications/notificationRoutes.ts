@@ -1,8 +1,7 @@
 // src/notifications/notificationRoutes.ts
-
 import { Router } from 'express';
-import authenticateJWT from '../middlewares/authenticateJWT';
 import { notificationController } from './notificationController';
+import authenticateJWT from '../middlewares/authenticateJWT';
 
 const router = Router();
 
