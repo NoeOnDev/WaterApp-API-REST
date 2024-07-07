@@ -23,12 +23,15 @@ const port = env_1.env.port;
 app.use(express_1.default.json());
 app.use('/users', userRoutes_1.default);
 app.use('/streets', streetRoutes_1.default);
+app.get('/', (_req, res) => {
+    res.send('Welcome to the best API 🚬');
+});
 function start() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield (0, database_1.connect)();
             app.listen(port, () => {
-                console.log(`Server running on port ${port}`);
+                console.log(`Server running on port http://localhost:${port} 🔥`);
             });
         }
         catch (error) {

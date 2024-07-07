@@ -12,11 +12,15 @@ app.use(express.json());
 app.use('/users', userRoutes);
 app.use('/streets', streetRoutes);
 
+app.get('/', (_req, res) => {
+    res.send('Welcome to the best API 🚬');
+});
+
 async function start() {
     try {
         await connect();
         app.listen(port, () => {
-            console.log(`Server running on port ${port}`);
+            console.log(`Server running on port http://localhost:${port} 🔥`);
         });
     } catch (error) {
         console.error("Failed to start server due to database connection error:", error);
