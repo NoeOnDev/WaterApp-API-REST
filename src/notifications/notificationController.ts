@@ -11,7 +11,7 @@ class NotificationController {
         try {
             const { user } = req;
             if (!user || user.role !== 'Admin') {
-                return res.sendStatus(403); // Forbidden
+                return res.sendStatus(403);
             }
 
             const { message, street } = req.body;
