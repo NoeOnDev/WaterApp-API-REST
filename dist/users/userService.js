@@ -55,7 +55,10 @@ class UserService {
         return __awaiter(this, void 0, void 0, function* () {
             const client = yield database_1.pool.connect();
             try {
-                const query = 'SELECT username, email, role FROM Users';
+                const query = `
+                    SELECT Users.username, Users.email, Users.role, Street.name AS street
+                    FROM Users
+                    JOIN Street ON Users.street = Street.name`;
                 const result = yield client.query(query);
                 return result.rows;
             }
