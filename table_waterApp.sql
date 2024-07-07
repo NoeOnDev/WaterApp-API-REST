@@ -6,10 +6,15 @@ SELECT * FROM SuggestedMessage;
 SELECT * FROM UserNotification;
 SELECT * FROM NotificationStreet;
 
+CREATE TABLE Street (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL
+);
+
 CREATE TABLE Users (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(50)NOT NULL,
-    street VARCHAR(100),
+    username VARCHAR(50) NOT NULL,
+    street VARCHAR(100) REFERENCES Street(name),
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     role VARCHAR(10) CHECK (role IN ('User', 'Admin')) NOT NULL
@@ -29,11 +34,6 @@ CREATE TABLE NotificationHistory (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE Street (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) UNIQUE NOT NULL
-);
-
 CREATE TABLE SuggestedMessage (
     id SERIAL PRIMARY KEY,
     message TEXT UNIQUE NOT NULL,
@@ -49,9 +49,9 @@ CREATE TABLE UserNotification (
 );
 
 CREATE TABLE NotificationStreet (
+    id SERIAL PRIMARY KEY,
     notification_id INTEGER REFERENCES Notification(id),
-    street_id INTEGER REFERENCES Street(id),
-    PRIMARY KEY (notification_id, street_id)
+    street_id INTEGER REFERENCES Street(id)
 );
 
 -- Eliminar registros de las tablas
