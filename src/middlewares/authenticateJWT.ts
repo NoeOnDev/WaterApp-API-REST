@@ -27,7 +27,7 @@ const authenticateJWT = (req: AuthRequest, res: Response, next: NextFunction) =>
         req.user = user as AuthRequest['user'];
         return next();
     });
-    return null;
+    return null; // Esto es necesario para que TypeScript no se queje
 };
 
 export default authenticateJWT;

@@ -22,6 +22,6 @@ const authenticateJWT = (req, res, next) => {
         req.user = user;
         return next();
     });
-    return null;
+    return null; // Esto es necesario para que TypeScript no se queje
 };
 exports.default = authenticateJWT;
