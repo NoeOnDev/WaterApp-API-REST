@@ -22,6 +22,6 @@
     "noImplicitReturns": true,                           /* Habilita la verificación de rutas de código que no retornan en una función. */
     "noFallthroughCasesInSwitch": true                   /* Habilita la verificación de casos en switch que no hacen break. */
   },
-  "include": ["src", "./src/types", "./node_modules/@types"],                                    /* Incluye todos los archivos TypeScript en el directorio src. */
+  "include": ["src"],                                    /* Incluye todos los archivos TypeScript en el directorio src. */
   "exclude": ["node_modules", "**/*.spec.ts"]            /* Excluye node_modules y archivos de pruebas. */
 }

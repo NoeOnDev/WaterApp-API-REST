@@ -28,5 +28,20 @@ class NotificationController {
             }
         });
     }
+    getAdminNotificationHistory(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { user } = req;
+                if (!user || user.role !== 'Admin') {
+                    return res.sendStatus(403); // Forbidden
+                }
+                const history = yield notificationService_1.notificationService.getAdminNotificationHistory();
+                return res.status(200).json(history);
+            }
+            catch (error) {
+                return res.status(500).json({ error: error.message });
+            }
+        });
+    }
 }
 exports.notificationController = new NotificationController();
