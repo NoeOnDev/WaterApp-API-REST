@@ -22,6 +22,6 @@ const authenticateJWT = (req, res, next) => {
         req.user = user;
         return next();
     });
-    return undefined;
+    return null;
 };
 exports.default = authenticateJWT;

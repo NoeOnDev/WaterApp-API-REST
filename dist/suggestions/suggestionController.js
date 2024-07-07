@@ -15,7 +15,11 @@ class SuggestionController {
     createSuggestion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { message, adminId } = req.body;
+                const { message } = req.body;
+                if (!req.user || req.user.role !== 'Admin') {
+                    return res.sendStatus(403);
+                }
+                const adminId = req.user.id;
                 const suggestion = yield suggestionService_1.suggestionService.createSuggestion({ message, adminId });
                 res.status(201).json(suggestion);
             }
@@ -27,6 +31,7 @@ class SuggestionController {
                     res.status(400).json({ error: 'Unknown error' });
                 }
             }
+            return null;
         });
     }
     getAllSuggestions(_req, res) {
@@ -43,11 +48,15 @@ class SuggestionController {
                     res.status(400).json({ error: 'Unknown error' });
                 }
             }
+            return null;
         });
     }
     deleteSuggestion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                if (!req.user || req.user.role !== 'Admin') {
+                    return res.sendStatus(403);
+                }
                 const { id } = req.params;
                 const suggestion = yield suggestionService_1.suggestionService.deleteSuggestion(parseInt(id, 10));
                 res.status(200).json(suggestion);
@@ -60,6 +69,7 @@ class SuggestionController {
                     res.status(400).json({ error: 'Unknown error' });
                 }
             }
+            return null;
         });
     }
 }

@@ -2,10 +2,18 @@
 import { Request, Response } from 'express';
 import { suggestionService } from './suggestionService';
 
+interface AuthRequest extends Request {
+    user?: { id: number; username: string; role: string };
+}
+
 class SuggestionController {
-    async createSuggestion(req: Request, res: Response) {
+    async createSuggestion(req: AuthRequest, res: Response) {
         try {
-            const { message, adminId } = req.body;
+            const { message } = req.body;
+            if (!req.user || req.user.role !== 'Admin') {
+                return res.sendStatus(403);
+            }
+            const adminId = req.user.id;
             const suggestion = await suggestionService.createSuggestion({ message, adminId });
             res.status(201).json(suggestion);
         } catch (error) {
@@ -15,6 +23,7 @@ class SuggestionController {
                 res.status(400).json({ error: 'Unknown error' });
             }
         }
+        return null;
     }
 
     async getAllSuggestions(_req: Request, res: Response) {
@@ -28,10 +37,14 @@ class SuggestionController {
                 res.status(400).json({ error: 'Unknown error' });
             }
         }
+        return null;
     }
 
-    async deleteSuggestion(req: Request, res: Response) {
+    async deleteSuggestion(req: AuthRequest, res: Response) {
         try {
+            if (!req.user || req.user.role !== 'Admin') {
+                return res.sendStatus(403);
+            }
             const { id } = req.params;
             const suggestion = await suggestionService.deleteSuggestion(parseInt(id, 10));
             res.status(200).json(suggestion);
@@ -42,6 +55,7 @@ class SuggestionController {
                 res.status(400).json({ error: 'Unknown error' });
             }
         }
+        return null;
     }
 }
 

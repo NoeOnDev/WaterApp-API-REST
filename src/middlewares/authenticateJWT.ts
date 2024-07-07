@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { env } from '../config/env';
 
 interface AuthRequest extends Request {
-    user?: any;
+    user?: { id: number; username: string; role: string };
 }
 
 const authenticateJWT = (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -24,11 +24,10 @@ const authenticateJWT = (req: AuthRequest, res: Response, next: NextFunction) =>
             return res.sendStatus(403);
         }
 
-        req.user = user;
+        req.user = user as AuthRequest['user'];
         return next();
     });
-
-    return undefined;
+    return null;
 };
 
 export default authenticateJWT;
