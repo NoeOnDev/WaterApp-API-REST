@@ -21,6 +21,20 @@ class NotificationController {
             return res.status(500).json({ error: error.message });
         }
     }
+
+    async getNotificationHistory(req: AuthRequest, res: Response) {
+        try {
+            const { user } = req;
+            if (!user || user.role !== 'Admin') {
+                return res.sendStatus(403);
+            }
+
+            const notificationHistory = await notificationService.getNotificationHistory();
+            return res.status(200).json(notificationHistory);
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
 }
 
 export const notificationController = new NotificationController();
