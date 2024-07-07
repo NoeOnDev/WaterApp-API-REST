@@ -10,9 +10,9 @@ class UserController {
             res.status(201).json(user);
         } catch (error) {
             if (error instanceof Error) {
-                console.log(error.message);
+                res.status(400).json({ error: error.message });
             } else {
-                console.log('Error desconocido');
+                res.status(400).json({ error: 'Unknown error' });
             }
         }
     }
@@ -23,23 +23,23 @@ class UserController {
             res.status(200).json(users);
         } catch (error) {
             if (error instanceof Error) {
-                console.log(error.message);
+                res.status(400).json({ error: error.message });
             } else {
-                console.log('Error desconocido');
+                res.status(400).json({ error: 'Unknown error' });
             }
         }
     }
-    
+
     async loginUser(req: Request, res: Response) {
         try {
             const { email, password } = req.body;
-            const user = await userService.loginUser({ email, password });
-            res.status(200).json(user);
+            const { token, user } = await userService.loginUser({ email, password });
+            res.status(200).json({ token, user });
         } catch (error) {
             if (error instanceof Error) {
-                console.log(error.message);
+                res.status(400).json({ error: error.message });
             } else {
-                console.log('Error desconocido');
+                res.status(400).json({ error: 'Unknown error' });
             }
         }
     }

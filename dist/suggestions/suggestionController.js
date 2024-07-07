@@ -21,10 +21,10 @@ class SuggestionController {
             }
             catch (error) {
                 if (error instanceof Error) {
-                    console.log(error.message);
+                    res.status(400).json({ error: error.message });
                 }
                 else {
-                    console.log('Error desconocido');
+                    res.status(400).json({ error: 'Unknown error' });
                 }
             }
         });
@@ -37,10 +37,10 @@ class SuggestionController {
             }
             catch (error) {
                 if (error instanceof Error) {
-                    console.log(error.message);
+                    res.status(400).json({ error: error.message });
                 }
                 else {
-                    console.log('Error desconocido');
+                    res.status(400).json({ error: 'Unknown error' });
                 }
             }
         });
@@ -54,10 +54,10 @@ class SuggestionController {
             }
             catch (error) {
                 if (error instanceof Error) {
-                    console.log(error.message);
+                    res.status(400).json({ error: error.message });
                 }
                 else {
-                    console.log('Error desconocido');
+                    res.status(400).json({ error: 'Unknown error' });
                 }
             }
         });

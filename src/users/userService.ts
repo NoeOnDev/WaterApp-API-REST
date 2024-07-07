@@ -1,6 +1,8 @@
 // src/users/userService.ts
-import { pool } from '../config/database';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { pool } from '../config/database';
+import { env } from '../config/env';
 
 interface RegisterUserDto {
     username: string;
@@ -81,7 +83,18 @@ class UserService {
                 throw new Error('Invalid email or password');
             }
 
-            return { username: user.username, email: user.email, role: user.role };
+            const jwtSecret = env.jwt.jwtSecret;
+            if (typeof jwtSecret === 'undefined') {
+                throw new Error('La clave secreta JWT no está definida');
+            }
+
+            const token = jwt.sign(
+                { id: user.id, username: user.username, role: user.role },
+                jwtSecret,
+                { expiresIn: env.jwt.jwtExpiration }
+            );
+
+            return { token, user: { username: user.username, email: user.email, role: user.role } };
         } finally {
             client.release();
         }
