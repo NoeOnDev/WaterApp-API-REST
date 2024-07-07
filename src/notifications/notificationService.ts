@@ -82,6 +82,25 @@ class NotificationService {
             client.release();
         }
     }
+
+    async getUserNotifications(userId: number) {
+        const client = await pool.connect();
+        try {
+            const query = `
+                SELECT un.notification_id, n.message, n.created_at, s.name AS street
+                FROM UserNotification un
+                JOIN Notification n ON un.notification_id = n.id
+                JOIN NotificationStreet ns ON n.id = ns.notification_id
+                JOIN Street s ON ns.street_id = s.id
+                WHERE un.user_id = $1
+                ORDER BY n.created_at DESC
+            `;
+            const result = await client.query(query, [userId]);
+            return result.rows;
+        } finally {
+            client.release();
+        }
+    }
 }
 
 export const notificationService = new NotificationService();

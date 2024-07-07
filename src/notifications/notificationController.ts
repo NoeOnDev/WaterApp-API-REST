@@ -56,6 +56,24 @@ class NotificationController {
         }
         return; // Esto es necesario para que TypeScript no se queje
     }
+
+    async getUserNotifications(req: AuthRequest, res: Response) {
+        try {
+            const userId = req.user?.id;
+            if (!userId) {
+                return res.sendStatus(403);
+            }
+            const notifications = await notificationService.getUserNotifications(userId);
+            res.status(200).json(notifications);
+        } catch (error) {
+            if (error instanceof Error) {
+                res.status(400).json({ error: error.message });
+            } else {
+                res.status(400).json({ error: 'Unknown error' });
+            }
+        }
+        return; // Esto es necesario para que TypeScript no se queje
+    }
 }
 
 export const notificationController = new NotificationController();

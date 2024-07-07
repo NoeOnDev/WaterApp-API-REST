@@ -72,5 +72,27 @@ class NotificationController {
             return; // Esto es necesario para que TypeScript no se queje
         });
     }
+    getUserNotifications(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            try {
+                const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
+                if (!userId) {
+                    return res.sendStatus(403);
+                }
+                const notifications = yield notificationService_1.notificationService.getUserNotifications(userId);
+                res.status(200).json(notifications);
+            }
+            catch (error) {
+                if (error instanceof Error) {
+                    res.status(400).json({ error: error.message });
+                }
+                else {
+                    res.status(400).json({ error: 'Unknown error' });
+                }
+            }
+            return; // Esto es necesario para que TypeScript no se queje
+        });
+    }
 }
 exports.notificationController = new NotificationController();

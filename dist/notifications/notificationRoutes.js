@@ -11,4 +11,5 @@ const router = (0, express_1.Router)();
 router.post('/send', authenticateJWT_1.default, notificationController_1.notificationController.sendNotification);
 router.get('/', authenticateJWT_1.default, notificationController_1.notificationController.getAllNotifications);
 router.get('/history', authenticateJWT_1.default, notificationController_1.notificationController.getNotificationHistory);
+router.get('/user', authenticateJWT_1.default, notificationController_1.notificationController.getUserNotifications);
 exports.default = router;

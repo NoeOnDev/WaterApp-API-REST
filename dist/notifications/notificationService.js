@@ -95,5 +95,26 @@ class NotificationService {
             }
         });
     }
+    getUserNotifications(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const client = yield database_1.pool.connect();
+            try {
+                const query = `
+                SELECT un.notification_id, n.message, n.created_at, s.name AS street
+                FROM UserNotification un
+                JOIN Notification n ON un.notification_id = n.id
+                JOIN NotificationStreet ns ON n.id = ns.notification_id
+                JOIN Street s ON ns.street_id = s.id
+                WHERE un.user_id = $1
+                ORDER BY n.created_at DESC
+            `;
+                const result = yield client.query(query, [userId]);
+                return result.rows;
+            }
+            finally {
+                client.release();
+            }
+        });
+    }
 }
 exports.notificationService = new NotificationService();
