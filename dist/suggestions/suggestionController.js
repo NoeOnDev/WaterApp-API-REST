@@ -48,7 +48,6 @@ class SuggestionController {
                     res.status(400).json({ error: 'Unknown error' });
                 }
             }
-            return null;
         });
     }
     deleteSuggestion(req, res) {
