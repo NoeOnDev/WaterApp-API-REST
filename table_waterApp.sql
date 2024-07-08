@@ -1,4 +1,5 @@
 SELECT * FROM Users;
+SELECT * FROM VerificationCodes;
 SELECT * FROM Notification;
 SELECT * FROM NotificationHistory;
 SELECT * FROM Street;
@@ -18,6 +19,13 @@ CREATE TABLE Users (
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     role VARCHAR(10) CHECK (role IN ('User', 'Admin')) NOT NULL
+);
+
+CREATE TABLE VerificationCodes (
+    user_id INTEGER REFERENCES Users(id) ON DELETE CASCADE UNIQUE,
+    code VARCHAR(6) NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    PRIMARY KEY (user_id)
 );
 
 CREATE TABLE Notification (
@@ -65,7 +73,7 @@ DELETE FROM Users;
 DROP TABLE IF EXISTS UserNotification CASCADE;
 DROP TABLE IF EXISTS NotificationStreet CASCADE;
 DROP TABLE IF EXISTS SuggestedMessage CASCADE;
-DROP TABLE IF EXISTS Street CASCADE;
+DROP TABLE IF EXISTS VerificationCodes CASCADE;
 DROP TABLE IF EXISTS NotificationHistory CASCADE;
 DROP TABLE IF EXISTS Notification CASCADE;
 DROP TABLE IF EXISTS Users CASCADE;
