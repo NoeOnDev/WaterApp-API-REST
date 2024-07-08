@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { pool } from '../config/database';
 import { env } from '../config/env';
+import { sendVerificationCode } from './emailService';
 
 interface RegisterUserDto {
     username: string;
@@ -57,9 +58,9 @@ class UserService {
         const client = await pool.connect();
         try {
             const query = `
-                    SELECT Users.username, Users.email, Users.role, Street.name AS street
-                    FROM Users
-                    JOIN Street ON Users.street = Street.name`;
+                SELECT Users.username, Users.email, Users.role, Street.name AS street
+                FROM Users
+                JOIN Street ON Users.street = Street.name`;
             const result = await client.query(query);
             return result.rows;
         } catch (error) {
@@ -98,6 +99,55 @@ class UserService {
             );
 
             return { token, user: { username: user.username, email: user.email, role: user.role } };
+        } finally {
+            client.release();
+        }
+    }
+
+    async generateVerificationCode(email: string) {
+        const client = await pool.connect();
+        try {
+            const userResult = await client.query('SELECT id FROM Users WHERE email = $1', [email]);
+            if (userResult.rows.length === 0) {
+                throw new Error('Email not found');
+            }
+            const userId = userResult.rows[0].id;
+
+            const code = Math.floor(100000 + Math.random() * 900000).toString();
+            const expiresAt = new Date(Date.now() + 3600000);
+
+            await client.query(
+                'INSERT INTO VerificationCodes (user_id, code, expires_at) VALUES ($1, $2, $3) ON CONFLICT (user_id) DO UPDATE SET code = $2, expires_at = $3',
+                [userId, code, expiresAt]
+            );
+
+            await sendVerificationCode(email, code);
+        } finally {
+            client.release();
+        }
+    }
+
+    async verifyCode(userId: number, code: string) {
+        const client = await pool.connect();
+        try {
+            const result = await client.query('SELECT expires_at FROM VerificationCodes WHERE user_id = $1 AND code = $2', [userId, code]);
+            if (result.rows.length === 0) {
+                throw new Error('Invalid or expired code');
+            }
+            const expiresAt = new Date(result.rows[0].expires_at);
+            if (expiresAt < new Date()) {
+                throw new Error('Expired code');
+            }
+        } finally {
+            client.release();
+        }
+    }
+
+    async resetPassword(userId: number, newPassword: string) {
+        const client = await pool.connect();
+        try {
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+            await client.query('UPDATE Users SET password = $1 WHERE id = $2', [hashedPassword, userId]);
         } finally {
             client.release();
         }

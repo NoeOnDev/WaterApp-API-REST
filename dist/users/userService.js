@@ -18,6 +18,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const database_1 = require("../config/database");
 const env_1 = require("../config/env");
+const emailService_1 = require("./emailService");
 class UserService {
     registerUser(_a) {
         return __awaiter(this, arguments, void 0, function* ({ username, street, email, password }) {
@@ -56,9 +57,9 @@ class UserService {
             const client = yield database_1.pool.connect();
             try {
                 const query = `
-                    SELECT Users.username, Users.email, Users.role, Street.name AS street
-                    FROM Users
-                    JOIN Street ON Users.street = Street.name`;
+                SELECT Users.username, Users.email, Users.role, Street.name AS street
+                FROM Users
+                JOIN Street ON Users.street = Street.name`;
                 const result = yield client.query(query);
                 return result.rows;
             }
@@ -90,6 +91,55 @@ class UserService {
                 }
                 const token = jsonwebtoken_1.default.sign({ id: user.id, username: user.username, role: user.role }, jwtSecret, { expiresIn: env_1.env.jwt.jwtExpiration });
                 return { token, user: { username: user.username, email: user.email, role: user.role } };
+            }
+            finally {
+                client.release();
+            }
+        });
+    }
+    generateVerificationCode(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const client = yield database_1.pool.connect();
+            try {
+                const userResult = yield client.query('SELECT id FROM Users WHERE email = $1', [email]);
+                if (userResult.rows.length === 0) {
+                    throw new Error('Email not found');
+                }
+                const userId = userResult.rows[0].id;
+                const code = Math.floor(100000 + Math.random() * 900000).toString();
+                const expiresAt = new Date(Date.now() + 3600000);
+                yield client.query('INSERT INTO VerificationCodes (user_id, code, expires_at) VALUES ($1, $2, $3) ON CONFLICT (user_id) DO UPDATE SET code = $2, expires_at = $3', [userId, code, expiresAt]);
+                yield (0, emailService_1.sendVerificationCode)(email, code);
+            }
+            finally {
+                client.release();
+            }
+        });
+    }
+    verifyCode(userId, code) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const client = yield database_1.pool.connect();
+            try {
+                const result = yield client.query('SELECT expires_at FROM VerificationCodes WHERE user_id = $1 AND code = $2', [userId, code]);
+                if (result.rows.length === 0) {
+                    throw new Error('Invalid or expired code');
+                }
+                const expiresAt = new Date(result.rows[0].expires_at);
+                if (expiresAt < new Date()) {
+                    throw new Error('Expired code');
+                }
+            }
+            finally {
+                client.release();
+            }
+        });
+    }
+    resetPassword(userId, newPassword) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const client = yield database_1.pool.connect();
+            try {
+                const hashedPassword = yield bcrypt_1.default.hash(newPassword, 10);
+                yield client.query('UPDATE Users SET password = $1 WHERE id = $2', [hashedPassword, userId]);
             }
             finally {
                 client.release();

@@ -9,10 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendVerificationEmail = void 0;
+exports.sendVerificationCode = void 0;
+// src/users/emailService.ts
 const mailer_1 = require("../config/mailer");
 const env_1 = require("../config/env");
-const sendVerificationEmail = (email, code) => __awaiter(void 0, void 0, void 0, function* () {
+const sendVerificationCode = (email, code) => __awaiter(void 0, void 0, void 0, function* () {
     const mailOptions = {
         from: env_1.env.mailer.user,
         to: email,
@@ -27,4 +28,4 @@ const sendVerificationEmail = (email, code) => __awaiter(void 0, void 0, void 0,
         console.log('Error sending email', error);
     }
 });
-exports.sendVerificationEmail = sendVerificationEmail;
+exports.sendVerificationCode = sendVerificationCode;

@@ -1,7 +1,8 @@
+// src/users/emailService.ts
 import { transporter } from '../config/mailer';
 import { env } from '../config/env';
 
-export const sendVerificationEmail = async (email: string, code: string) => {
+export const sendVerificationCode = async (email: string, code: string) => {
     const mailOptions = {
         from: env.mailer.user,
         to: email,
