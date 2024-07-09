@@ -1,5 +1,6 @@
 // src/index.ts
 import express from 'express';
+import cors from 'cors';
 import { connect } from './config/database';
 import { env } from './config/env';
 import userRoutes from './users/userRoutes';
@@ -10,6 +11,7 @@ import notificationRoutes from './notifications/notificationRoutes';
 const app = express();
 const port = env.port;
 
+app.use(cors());
 app.use(express.json());
 app.use('/users', userRoutes);
 app.use('/streets', streetRoutes);

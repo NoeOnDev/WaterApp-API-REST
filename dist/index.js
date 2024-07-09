@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // src/index.ts
 const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
 const database_1 = require("./config/database");
 const env_1 = require("./config/env");
 const userRoutes_1 = __importDefault(require("./users/userRoutes"));
@@ -22,6 +23,7 @@ const suggestionRoutes_1 = __importDefault(require("./suggestions/suggestionRout
 const notificationRoutes_1 = __importDefault(require("./notifications/notificationRoutes"));
 const app = (0, express_1.default)();
 const port = env_1.env.port;
+app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use('/users', userRoutes_1.default);
 app.use('/streets', streetRoutes_1.default);
