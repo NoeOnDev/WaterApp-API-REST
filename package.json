@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.ts",
   "scripts": {
-    "start": "node ./dist/server.js",
+    "start": "node --env-file .env ./dist/index.js",
     "build": "tsc",
     "dev": "tsc-watch --onSuccess \"node --env-file .env --watch ./dist/index.js\""
   },
