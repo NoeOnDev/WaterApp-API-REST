@@ -71,6 +71,25 @@ class UserService {
             }
         });
     }
+    updateUsername(userId, newUsername) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const client = yield database_1.pool.connect();
+            try {
+                const query = 'UPDATE Users SET username = $1 WHERE id = $2 RETURNING id, username, street, email, role';
+                const result = yield client.query(query, [newUsername, userId]);
+                if (result.rows.length === 0) {
+                    throw new Error('User not found');
+                }
+                return result.rows[0];
+            }
+            catch (error) {
+                throw new Error('Error updating username');
+            }
+            finally {
+                client.release();
+            }
+        });
+    }
     loginUser(_a) {
         return __awaiter(this, arguments, void 0, function* ({ email, password }) {
             const client = yield database_1.pool.connect();

@@ -70,6 +70,22 @@ class UserService {
         }
     }
 
+    async updateUsername(userId: number, newUsername: string) {
+        const client = await pool.connect();
+        try {
+            const query = 'UPDATE Users SET username = $1 WHERE id = $2 RETURNING id, username, street, email, role';
+            const result = await client.query(query, [newUsername, userId]);
+            if (result.rows.length === 0) {
+                throw new Error('User not found');
+            }
+            return result.rows[0];
+        } catch (error) {
+            throw new Error('Error updating username');
+        } finally {
+            client.release();
+        }
+    }
+
     async loginUser({ email, password }: LoginUserDto) {
         const client = await pool.connect();
         try {
