@@ -1,4 +1,8 @@
 // src/config/env.ts
+import { config } from "dotenv"
+
+config()
+
 export const env = {
     port: process.env.PORT,
     db: {

@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.env = void 0;
 // src/config/env.ts
+const dotenv_1 = require("dotenv");
+(0, dotenv_1.config)();
 exports.env = {
     port: process.env.PORT,
     db: {
