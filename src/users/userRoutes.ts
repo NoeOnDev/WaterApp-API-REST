@@ -1,11 +1,13 @@
 // src/users/userRoutes.ts
 import { Router } from 'express';
 import { userController } from './userController';
+import { registerUserValidation } from '../validations/userValidations';
+import { handleValidationErrors } from '../middlewares/handleValidationErrors';
 import authenticateJWT from '../middlewares/authenticateJWT';
 
 const router = Router();
 
-router.post('/register', userController.registerUser);
+router.post('/register', registerUserValidation, handleValidationErrors, userController.registerUser);
 router.get('/', userController.getAllUsers);
 router.patch('/update-username', authenticateJWT, userController.updateUsername);
 router.post('/login', userController.loginUser);
