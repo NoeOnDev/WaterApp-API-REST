@@ -34,12 +34,13 @@ class UserController {
         }
     }
 
-    async updateUsername(req: AuthRequest, res: Response) {
+    async updateUsername(req: AuthRequest, res: Response): Promise<void> {
         try {
             const { newUsername } = req.body;
             const userId = req.user?.id;
             if (!userId) {
-                return res.status(400).json({ error: 'User ID is required' });
+                res.status(400).json({ error: 'User ID is required' });
+                return;
             }
             const updatedUser = await userService.updateUsername(userId, newUsername);
             res.status(200).json(updatedUser);
@@ -50,7 +51,6 @@ class UserController {
                 res.status(400).json({ error: 'Unknown error' });
             }
         }
-        return; // Esto es necesario para que TypeScript no se queje
     }
 
     async loginUser(req: Request, res: Response) {

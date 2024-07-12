@@ -52,7 +52,8 @@ class UserController {
                 const { newUsername } = req.body;
                 const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
                 if (!userId) {
-                    return res.status(400).json({ error: 'User ID is required' });
+                    res.status(400).json({ error: 'User ID is required' });
+                    return;
                 }
                 const updatedUser = yield userService_1.userService.updateUsername(userId, newUsername);
                 res.status(200).json(updatedUser);
@@ -65,7 +66,6 @@ class UserController {
                     res.status(400).json({ error: 'Unknown error' });
                 }
             }
-            return; // Esto es necesario para que TypeScript no se queje
         });
     }
     loginUser(req, res) {

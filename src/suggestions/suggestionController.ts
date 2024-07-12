@@ -7,11 +7,12 @@ interface AuthRequest extends Request {
 }
 
 class SuggestionController {
-    async createSuggestion(req: AuthRequest, res: Response) {
+    async createSuggestion(req: AuthRequest, res: Response): Promise<void> {
         try {
             const { message } = req.body;
             if (!req.user || req.user.role !== 'Admin') {
-                return res.sendStatus(403);
+                res.sendStatus(403);
+                return;
             }
             const adminId = req.user.id;
             const suggestion = await suggestionService.createSuggestion({ message, adminId });
@@ -23,7 +24,6 @@ class SuggestionController {
                 res.status(400).json({ error: 'Unknown error' });
             }
         }
-        return; // Esto es necesario para que TypeScript no se queje
     }
 
     async getAllSuggestions(_req: Request, res: Response) {
@@ -39,10 +39,11 @@ class SuggestionController {
         }
     }
 
-    async deleteSuggestion(req: AuthRequest, res: Response) {
+    async deleteSuggestion(req: AuthRequest, res: Response): Promise<void> {
         try {
             if (!req.user || req.user.role !== 'Admin') {
-                return res.sendStatus(403);
+                res.sendStatus(403);
+                return;
             }
             const { id } = req.params;
             const suggestion = await suggestionService.deleteSuggestion(parseInt(id, 10));
@@ -54,7 +55,6 @@ class SuggestionController {
                 res.status(400).json({ error: 'Unknown error' });
             }
         }
-        return; // Esto es necesario para que TypeScript no se queje
     }
 }
 

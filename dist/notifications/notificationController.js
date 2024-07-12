@@ -17,7 +17,8 @@ class NotificationController {
             try {
                 const { message, streets } = req.body;
                 if (!req.user || req.user.role !== 'Admin') {
-                    return res.sendStatus(403);
+                    res.sendStatus(403);
+                    return;
                 }
                 const adminId = req.user.id;
                 const notification = yield notificationService_1.notificationService.sendNotification({ message, streets, adminId });
@@ -31,7 +32,6 @@ class NotificationController {
                     res.status(400).json({ error: 'Unknown error' });
                 }
             }
-            return; // Esto es necesario para que TypeScript no se queje
         });
     }
     getAllNotifications(_req, res) {
@@ -56,7 +56,8 @@ class NotificationController {
             try {
                 const adminId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
                 if (!adminId) {
-                    return res.sendStatus(403);
+                    res.sendStatus(403);
+                    return;
                 }
                 const history = yield notificationService_1.notificationService.getNotificationHistory(adminId);
                 res.status(200).json(history);
@@ -69,7 +70,6 @@ class NotificationController {
                     res.status(400).json({ error: 'Unknown error' });
                 }
             }
-            return; // Esto es necesario para que TypeScript no se queje
         });
     }
     getUserNotifications(req, res) {
@@ -78,7 +78,8 @@ class NotificationController {
             try {
                 const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
                 if (!userId) {
-                    return res.sendStatus(403);
+                    res.sendStatus(403);
+                    return;
                 }
                 const notifications = yield notificationService_1.notificationService.getUserNotifications(userId);
                 res.status(200).json(notifications);
@@ -91,7 +92,6 @@ class NotificationController {
                     res.status(400).json({ error: 'Unknown error' });
                 }
             }
-            return; // Esto es necesario para que TypeScript no se queje
         });
     }
 }

@@ -17,7 +17,8 @@ class SuggestionController {
             try {
                 const { message } = req.body;
                 if (!req.user || req.user.role !== 'Admin') {
-                    return res.sendStatus(403);
+                    res.sendStatus(403);
+                    return;
                 }
                 const adminId = req.user.id;
                 const suggestion = yield suggestionService_1.suggestionService.createSuggestion({ message, adminId });
@@ -31,7 +32,6 @@ class SuggestionController {
                     res.status(400).json({ error: 'Unknown error' });
                 }
             }
-            return; // Esto es necesario para que TypeScript no se queje
         });
     }
     getAllSuggestions(_req, res) {
@@ -54,7 +54,8 @@ class SuggestionController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!req.user || req.user.role !== 'Admin') {
-                    return res.sendStatus(403);
+                    res.sendStatus(403);
+                    return;
                 }
                 const { id } = req.params;
                 const suggestion = yield suggestionService_1.suggestionService.deleteSuggestion(parseInt(id, 10));
@@ -68,7 +69,6 @@ class SuggestionController {
                     res.status(400).json({ error: 'Unknown error' });
                 }
             }
-            return; // Esto es necesario para que TypeScript no se queje
         });
     }
 }

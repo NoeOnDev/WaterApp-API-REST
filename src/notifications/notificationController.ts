@@ -7,11 +7,12 @@ interface AuthRequest extends Request {
 }
 
 class NotificationController {
-    async sendNotification(req: AuthRequest, res: Response) {
+    async sendNotification(req: AuthRequest, res: Response): Promise<void> {
         try {
             const { message, streets } = req.body;
             if (!req.user || req.user.role !== 'Admin') {
-                return res.sendStatus(403);
+                res.sendStatus(403);
+                return;
             }
             const adminId = req.user.id;
             const notification = await notificationService.sendNotification({ message, streets, adminId });
@@ -23,7 +24,6 @@ class NotificationController {
                 res.status(400).json({ error: 'Unknown error' });
             }
         }
-        return; // Esto es necesario para que TypeScript no se queje
     }
 
     async getAllNotifications(_req: AuthRequest, res: Response) {
@@ -39,11 +39,12 @@ class NotificationController {
         }
     }
 
-    async getNotificationHistory(req: AuthRequest, res: Response) {
+    async getNotificationHistory(req: AuthRequest, res: Response): Promise<void> {
         try {
             const adminId = req.user?.id;
             if (!adminId) {
-                return res.sendStatus(403);
+                res.sendStatus(403);
+                return;
             }
             const history = await notificationService.getNotificationHistory(adminId);
             res.status(200).json(history);
@@ -54,14 +55,14 @@ class NotificationController {
                 res.status(400).json({ error: 'Unknown error' });
             }
         }
-        return; // Esto es necesario para que TypeScript no se queje
     }
 
-    async getUserNotifications(req: AuthRequest, res: Response) {
+    async getUserNotifications(req: AuthRequest, res: Response): Promise<void> {
         try {
             const userId = req.user?.id;
             if (!userId) {
-                return res.sendStatus(403);
+                res.sendStatus(403);
+                return;
             }
             const notifications = await notificationService.getUserNotifications(userId);
             res.status(200).json(notifications);
@@ -72,7 +73,6 @@ class NotificationController {
                 res.status(400).json({ error: 'Unknown error' });
             }
         }
-        return; // Esto es necesario para que TypeScript no se queje
     }
 }
 
