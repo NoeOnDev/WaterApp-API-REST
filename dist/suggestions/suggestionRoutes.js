@@ -10,7 +10,7 @@ const suggestionsValidations_1 = require("../validations/suggestionsValidations"
 const handleValidationErrors_1 = require("../middlewares/handleValidationErrors");
 const authenticateJWT_1 = __importDefault(require("../middlewares/authenticateJWT"));
 const router = (0, express_1.Router)();
-router.post('/', authenticateJWT_1.default, suggestionsValidations_1.suggestionValidation, handleValidationErrors_1.handleValidationErrors, suggestionController_1.suggestionController.createSuggestion);
+router.post('/create', authenticateJWT_1.default, suggestionsValidations_1.suggestionValidation, handleValidationErrors_1.handleValidationErrors, suggestionController_1.suggestionController.createSuggestion);
 router.get('/', authenticateJWT_1.default, suggestionController_1.suggestionController.getAllSuggestions);
 router.delete('/:id', authenticateJWT_1.default, suggestionController_1.suggestionController.deleteSuggestion);
 exports.default = router;

@@ -2,7 +2,7 @@
 import { body } from 'express-validator';
 
 export const streetValidation = [
-    body('street')
+    body('name')
         .not()
         .isEmpty()
         .withMessage('Street cannot be empty')

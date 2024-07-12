@@ -4,7 +4,7 @@ exports.streetValidation = void 0;
 // src/validations/streetValidations.ts
 const express_validator_1 = require("express-validator");
 exports.streetValidation = [
-    (0, express_validator_1.body)('street')
+    (0, express_validator_1.body)('name')
         .not()
         .isEmpty()
         .withMessage('Street cannot be empty')

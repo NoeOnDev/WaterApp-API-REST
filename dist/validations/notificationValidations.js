@@ -11,6 +11,9 @@ exports.sendNotificationValidation = [
     (0, express_validator_1.body)('streets')
         .not().isEmpty().withMessage('Streets cannot be empty')
         .isArray().withMessage('Streets must be an array')
-        .custom((streets) => streets.every((street) => typeof street === 'string' && street.length <= 20))
-        .withMessage('Every street must be a string not longer than 20 characters'),
+        .custom((streets) => streets.every((street) => typeof street === 'string' &&
+        street.length >= 3 &&
+        street.length <= 20 &&
+        street === street.toUpperCase()))
+        .withMessage('Every street must be a string with 3 to 20 uppercase characters'),
 ];
