@@ -9,19 +9,21 @@ const authenticateJWT = (req, res, next) => {
     var _a;
     const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
     if (!token) {
-        return res.sendStatus(401);
+        res.sendStatus(401);
+        return;
     }
     const secret = env_1.env.jwt.jwtSecret;
     if (!secret) {
-        return res.sendStatus(500);
+        res.sendStatus(500);
+        return;
     }
     jsonwebtoken_1.default.verify(token, secret, (err, user) => {
         if (err) {
-            return res.sendStatus(403);
+            res.sendStatus(403);
+            return;
         }
         req.user = user;
-        return next();
+        next();
     });
-    return null; // Esto es necesario para que TypeScript no se queje
 };
 exports.default = authenticateJWT;
