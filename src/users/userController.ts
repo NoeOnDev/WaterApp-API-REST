@@ -1,6 +1,7 @@
 // src/users/userController.ts
 import { Request, Response } from 'express';
 import { userService } from './userService';
+import { AppError } from '../errors/AppError';
 
 interface AuthRequest extends Request {
     user?: { id: number; username: string; role: string };
@@ -13,10 +14,10 @@ class UserController {
             const user = await userService.registerUser({ username, street, email, password });
             res.status(201).json(user);
         } catch (error) {
-            if (error instanceof Error) {
-                res.status(400).json({ error: error.message });
+            if (error instanceof AppError) {
+                res.status(error.statusCode).json({ error: error.message, code: error.errorCode, details: error.details });
             } else {
-                res.status(400).json({ error: 'Unknown error' });
+                res.status(500).json({ error: 'Unknown error' });
             }
         }
     }
@@ -59,10 +60,10 @@ class UserController {
             const { token, user } = await userService.loginUser({ email, password });
             res.status(200).json({ token, user });
         } catch (error) {
-            if (error instanceof Error) {
-                res.status(400).json({ error: error.message });
+            if (error instanceof AppError) {
+                res.status(error.statusCode).json({ error: error.message, code: error.errorCode, details: error.details });
             } else {
-                res.status(400).json({ error: 'Unknown error' });
+                res.status(500).json({ error: 'Unknown error' });
             }
         }
     }

@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
 const userService_1 = require("./userService");
+const AppError_1 = require("../errors/AppError");
 class UserController {
     registerUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -20,11 +21,11 @@ class UserController {
                 res.status(201).json(user);
             }
             catch (error) {
-                if (error instanceof Error) {
-                    res.status(400).json({ error: error.message });
+                if (error instanceof AppError_1.AppError) {
+                    res.status(error.statusCode).json({ error: error.message, code: error.errorCode, details: error.details });
                 }
                 else {
-                    res.status(400).json({ error: 'Unknown error' });
+                    res.status(500).json({ error: 'Unknown error' });
                 }
             }
         });
@@ -76,11 +77,11 @@ class UserController {
                 res.status(200).json({ token, user });
             }
             catch (error) {
-                if (error instanceof Error) {
-                    res.status(400).json({ error: error.message });
+                if (error instanceof AppError_1.AppError) {
+                    res.status(error.statusCode).json({ error: error.message, code: error.errorCode, details: error.details });
                 }
                 else {
-                    res.status(400).json({ error: 'Unknown error' });
+                    res.status(500).json({ error: 'Unknown error' });
                 }
             }
         });
