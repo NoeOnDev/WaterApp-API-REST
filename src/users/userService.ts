@@ -3,10 +3,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { pool } from '../config/database';
 import { env } from '../config/env';
-import { AppError } from '../errors/AppError';
-import { UserExistsError } from './userErrors/UserExistsError';
-import { InvalidCredentialsError } from './userErrors/InvalidCredentialsError';
-import { StreetNotFoundError } from './userErrors/StreetNotFoundError';
 import { sendVerificationCode } from './emailService';
 
 interface RegisterUserDto {
@@ -26,16 +22,6 @@ class UserService {
         const client = await pool.connect();
         try {
             await client.query('BEGIN');
-
-            const userExistsResult = await client.query('SELECT 1 FROM Users WHERE email = $1', [email]);
-            if (userExistsResult.rows.length > 0) {
-                throw new UserExistsError(`El usuario con el email ${email} ya existe`);
-            }
-
-            const streetExistsResult = await client.query('SELECT 1 FROM Street WHERE name = $1', [street]);
-            if (streetExistsResult.rows.length === 0) {
-                throw new StreetNotFoundError(street);
-            }
 
             const userCountResult = await client.query('SELECT COUNT(*) FROM Users');
             const userCount = parseInt(userCountResult.rows[0].count, 10);
@@ -62,9 +48,6 @@ class UserService {
             return newUser;
         } catch (error) {
             await client.query('ROLLBACK');
-            if (error instanceof AppError) {
-                throw error;
-            }
             throw new Error('Error registering user');
         } finally {
             client.release();
@@ -75,9 +58,9 @@ class UserService {
         const client = await pool.connect();
         try {
             const query = `
-                SELECT Users.username, Users.email, Users.role, Streets.name AS street
+                SELECT Users.username, Users.email, Users.role, Street.name AS street
                 FROM Users
-                JOIN Streets ON Users.street = Streets.name`;
+                JOIN Street ON Users.street = Street.name`;
             const result = await client.query(query);
             return result.rows;
         } catch (error) {
@@ -110,14 +93,14 @@ class UserService {
             const result = await client.query(query, [email]);
 
             if (result.rows.length === 0) {
-                throw new InvalidCredentialsError();
+                throw new Error('Invalid email or password');
             }
 
             const user = result.rows[0];
             const isPasswordValid = await bcrypt.compare(password, user.password);
 
             if (!isPasswordValid) {
-                throw new InvalidCredentialsError();
+                throw new Error('Invalid email or password');
             }
 
             const jwtSecret = env.jwt.jwtSecret;

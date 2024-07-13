@@ -18,10 +18,6 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const database_1 = require("../config/database");
 const env_1 = require("../config/env");
-const AppError_1 = require("../errors/AppError");
-const UserExistsError_1 = require("./userErrors/UserExistsError");
-const InvalidCredentialsError_1 = require("./userErrors/InvalidCredentialsError");
-const StreetNotFoundError_1 = require("./userErrors/StreetNotFoundError");
 const emailService_1 = require("./emailService");
 class UserService {
     registerUser(_a) {
@@ -29,14 +25,6 @@ class UserService {
             const client = yield database_1.pool.connect();
             try {
                 yield client.query('BEGIN');
-                const userExistsResult = yield client.query('SELECT 1 FROM Users WHERE email = $1', [email]);
-                if (userExistsResult.rows.length > 0) {
-                    throw new UserExistsError_1.UserExistsError(`El usuario con el email ${email} ya existe`);
-                }
-                const streetExistsResult = yield client.query('SELECT 1 FROM Street WHERE name = $1', [street]);
-                if (streetExistsResult.rows.length === 0) {
-                    throw new StreetNotFoundError_1.StreetNotFoundError(street);
-                }
                 const userCountResult = yield client.query('SELECT COUNT(*) FROM Users');
                 const userCount = parseInt(userCountResult.rows[0].count, 10);
                 const role = userCount === 0 ? 'Admin' : 'User';
@@ -57,9 +45,6 @@ class UserService {
             }
             catch (error) {
                 yield client.query('ROLLBACK');
-                if (error instanceof AppError_1.AppError) {
-                    throw error;
-                }
                 throw new Error('Error registering user');
             }
             finally {
@@ -72,9 +57,9 @@ class UserService {
             const client = yield database_1.pool.connect();
             try {
                 const query = `
-                SELECT Users.username, Users.email, Users.role, Streets.name AS street
+                SELECT Users.username, Users.email, Users.role, Street.name AS street
                 FROM Users
-                JOIN Streets ON Users.street = Streets.name`;
+                JOIN Street ON Users.street = Street.name`;
                 const result = yield client.query(query);
                 return result.rows;
             }
@@ -112,12 +97,12 @@ class UserService {
                 const query = 'SELECT id, username, email, password, role FROM Users WHERE email = $1';
                 const result = yield client.query(query, [email]);
                 if (result.rows.length === 0) {
-                    throw new InvalidCredentialsError_1.InvalidCredentialsError();
+                    throw new Error('Invalid email or password');
                 }
                 const user = result.rows[0];
                 const isPasswordValid = yield bcrypt_1.default.compare(password, user.password);
                 if (!isPasswordValid) {
-                    throw new InvalidCredentialsError_1.InvalidCredentialsError();
+                    throw new Error('Invalid email or password');
                 }
                 const jwtSecret = env_1.env.jwt.jwtSecret;
                 if (typeof jwtSecret === 'undefined') {
