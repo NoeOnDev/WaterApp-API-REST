@@ -1,6 +1,6 @@
 // src/streets/streetRoutes.ts
 import { Router } from 'express';
-import { streetValidation } from '../validations/streetValidations';
+import { streetValidation } from './streetValidations';
 import { handleValidationErrors } from '../middlewares/handleValidationErrors';
 import { streetController } from './streetController';
 

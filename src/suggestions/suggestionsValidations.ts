@@ -1,4 +1,4 @@
-// src/validations/suggestionsValidations.ts
+// src/suggestions/suggestionsValidations.ts
 import { body } from 'express-validator';
 
 export const suggestionValidation = [

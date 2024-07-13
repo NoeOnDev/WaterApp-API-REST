@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // src/suggestions/suggestionRoutes.ts
 const express_1 = require("express");
 const suggestionController_1 = require("./suggestionController");
-const suggestionsValidations_1 = require("../validations/suggestionsValidations");
+const suggestionsValidations_1 = require("./suggestionsValidations");
 const handleValidationErrors_1 = require("../middlewares/handleValidationErrors");
 const authenticateJWT_1 = __importDefault(require("../middlewares/authenticateJWT"));
 const router = (0, express_1.Router)();

@@ -1,4 +1,4 @@
-// src/validations/streetValidations.ts
+// src/streets/streetValidations.ts
 import { body } from 'express-validator';
 
 export const streetValidation = [

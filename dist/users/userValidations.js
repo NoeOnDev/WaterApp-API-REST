@@ -1,8 +1,10 @@
-// src/validations/userValidations.ts
-import { body } from 'express-validator';
-
-export const registerUserValidation = [
-    body('username')
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.registerUserValidation = void 0;
+// src/users/userValidations.ts
+const express_validator_1 = require("express-validator");
+exports.registerUserValidation = [
+    (0, express_validator_1.body)('username')
         .not()
         .isEmpty()
         .withMessage('Username cannot be empty')
@@ -12,7 +14,7 @@ export const registerUserValidation = [
         .withMessage('Username must be a string')
         .matches(/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/)
         .withMessage('Username must only contain letters and spaces'),
-    body('street')
+    (0, express_validator_1.body)('street')
         .not()
         .isEmpty()
         .withMessage('Street cannot be empty')
@@ -22,7 +24,7 @@ export const registerUserValidation = [
         .withMessage('Street must be a string')
         .matches(/^[A-Z\s]+$/)
         .withMessage('Street must be in uppercase letters only'),
-    body('email')
+    (0, express_validator_1.body)('email')
         .not()
         .isEmpty()
         .withMessage('Email cannot be empty')
@@ -30,7 +32,7 @@ export const registerUserValidation = [
         .withMessage('Email must be valid')
         .isLength({ max: 40 })
         .withMessage('Email must not be longer than 40 characters'),
-    body('password')
+    (0, express_validator_1.body)('password')
         .not()
         .isEmpty()
         .withMessage('Password cannot be empty')

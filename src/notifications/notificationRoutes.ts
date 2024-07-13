@@ -1,7 +1,7 @@
 // src/notifications/notificationRoutes.ts
 import { Router } from 'express';
 import { notificationController } from './notificationController';
-import { sendNotificationValidation } from '../validations/notificationValidations';
+import { sendNotificationValidation } from './notificationValidations';
 import { handleValidationErrors } from '../middlewares/handleValidationErrors';
 import authenticateJWT from '../middlewares/authenticateJWT';
 

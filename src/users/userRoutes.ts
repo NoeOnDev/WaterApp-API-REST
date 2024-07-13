@@ -1,7 +1,7 @@
 // src/users/userRoutes.ts
 import { Router } from 'express';
 import { userController } from './userController';
-import { registerUserValidation } from '../validations/userValidations';
+import { registerUserValidation } from './userValidations';
 import { handleValidationErrors } from '../middlewares/handleValidationErrors';
 import authenticateJWT from '../middlewares/authenticateJWT';
 

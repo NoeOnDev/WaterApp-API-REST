@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 // src/streets/streetRoutes.ts
 const express_1 = require("express");
-const streetValidations_1 = require("../validations/streetValidations");
+const streetValidations_1 = require("./streetValidations");
 const handleValidationErrors_1 = require("../middlewares/handleValidationErrors");
 const streetController_1 = require("./streetController");
 const router = (0, express_1.Router)();

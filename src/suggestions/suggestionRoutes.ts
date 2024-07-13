@@ -1,7 +1,7 @@
 // src/suggestions/suggestionRoutes.ts
 import { Router } from 'express';
 import { suggestionController } from './suggestionController';
-import { suggestionValidation } from '../validations/suggestionsValidations';
+import { suggestionValidation } from './suggestionsValidations';
 import { handleValidationErrors } from '../middlewares/handleValidationErrors';
 import authenticateJWT from '../middlewares/authenticateJWT';
 

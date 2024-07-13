@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // src/notifications/notificationRoutes.ts
 const express_1 = require("express");
 const notificationController_1 = require("./notificationController");
-const notificationValidations_1 = require("../validations/notificationValidations");
+const notificationValidations_1 = require("./notificationValidations");
 const handleValidationErrors_1 = require("../middlewares/handleValidationErrors");
 const authenticateJWT_1 = __importDefault(require("../middlewares/authenticateJWT"));
 const router = (0, express_1.Router)();

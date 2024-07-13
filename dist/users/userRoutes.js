@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // src/users/userRoutes.ts
 const express_1 = require("express");
 const userController_1 = require("./userController");
-const userValidations_1 = require("../validations/userValidations");
+const userValidations_1 = require("./userValidations");
 const handleValidationErrors_1 = require("../middlewares/handleValidationErrors");
 const authenticateJWT_1 = __importDefault(require("../middlewares/authenticateJWT"));
 const router = (0, express_1.Router)();
