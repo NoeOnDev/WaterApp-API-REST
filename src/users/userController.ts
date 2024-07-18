@@ -72,7 +72,7 @@ class UserController {
         try {
             const { email } = req.body;
             const userId = await userService.generateVerificationCode(email);
-            res.status(200).json({ message: 'Verification code sent', 'userId': userId });
+            res.status(200).json({ message: 'Verification code sent', userId });
         } catch (error) {
             if (error instanceof Error) {
                 res.status(400).json({ error: error.message });
