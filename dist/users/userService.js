@@ -129,6 +129,7 @@ class UserService {
                 const expiresAt = new Date(Date.now() + 3600000);
                 yield client.query('INSERT INTO VerificationCodes (user_id, code, expires_at) VALUES ($1, $2, $3) ON CONFLICT (user_id) DO UPDATE SET code = $2, expires_at = $3', [userId, code, expiresAt]);
                 yield (0, emailService_1.sendVerificationCode)(email, code);
+                return userId;
             }
             finally {
                 client.release();

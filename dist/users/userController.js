@@ -90,8 +90,8 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { email } = req.body;
-                yield userService_1.userService.generateVerificationCode(email);
-                res.status(200).json({ message: 'Verification code sent' });
+                const userId = yield userService_1.userService.generateVerificationCode(email);
+                res.status(200).json({ message: 'Verification code sent', userId });
             }
             catch (error) {
                 if (error instanceof Error) {
