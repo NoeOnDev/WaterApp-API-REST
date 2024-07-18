@@ -120,7 +120,7 @@ class UserService {
         }
     }
 
-    async generateVerificationCode(email: string) {
+    async generateVerificationCode(email: string): Promise<number> {
         const client = await pool.connect();
         try {
             const userResult = await client.query('SELECT id FROM Users WHERE email = $1', [email]);
@@ -138,6 +138,7 @@ class UserService {
             );
 
             await sendVerificationCode(email, code);
+            return userId;
         } finally {
             client.release();
         }
